@@ -114,6 +114,8 @@ func (h *HTTPServer) RegisterModules(mods []string) {
 			srvc = modules.NewRPCModule(h.serverConfig.RPCAPI)
 		case "dev":
 			srvc = modules.NewDevModule(h.serverConfig.BlockProducerAPI, h.serverConfig.NetworkAPI)
+		case "account":
+			srvc = modules.NewAccountModule(h.serverConfig.TransactionQueueAPI)
 		default:
 			h.logger.Warn("Unrecognized module", "module", mod)
 			continue

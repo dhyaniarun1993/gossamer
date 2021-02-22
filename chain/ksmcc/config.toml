@@ -5,7 +5,7 @@ log = "info"
 [log]
 core = ""
 network = ""
-rpc = ""
+rpc = "debug"
 state = ""
 runtime = ""
 babe = ""
@@ -30,11 +30,11 @@ nobootstrap = false
 nomdns = false
 
 [rpc]
-enabled = false
-external = false
+enabled = true
+external = true
 port = 8545
 host = "localhost"
 modules = ["system", "author", "chain", "state", "rpc"]
 ws-port = 8546
-ws = false
-ws-external = false
+ws = true
+ws-external = true

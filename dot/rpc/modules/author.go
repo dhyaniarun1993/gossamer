@@ -174,12 +174,15 @@ func (cm *AuthorModule) SubmitExtrinsic(r *http.Request, req *Extrinsic, res *Ex
 	// For RPC request the transaction source is External
 	ext := types.Extrinsic(append([]byte{byte(types.TxnExternal)}, extBytes...))
 
+	// todo ed, try decoding ext into go substrate extrinsic and see if that works
+
 	// validate the transaction
 	txv, err := cm.runtimeAPI.ValidateTransaction(ext)
 	if err != nil {
 		return err
 	}
 
+	// todo ed, testing extBytes (was ext)
 	vtx := transaction.NewValidTransaction(ext, txv)
 
 	if cm.coreAPI.IsBlockProducer() {

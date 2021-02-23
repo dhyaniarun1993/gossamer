@@ -113,8 +113,11 @@ func TestAuthorSubmitExtrinsic(t *testing.T) {
 func TestDecodeExt(t *testing.T) {
 	buffer := bytes.Buffer{}
 	decoder := scale.NewDecoder(&buffer)
-	buffer.Write(common.MustHexToBytes("0x2d0284ffd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d015212790fabe9d6ca21948e82767f38a5ee8645b1426b8ef4a678299852dcfa694b8388b1aa76e9b34eeccaa023c5ff2d7207763fbf9eb5dd01b1617adb7350820000000600ff90b5ab205c6974c9ea841be688864633dc9ca8a357843eeacf2314649965fe22e5c0"))
+	buffer.Write(common.MustHexToBytes("0x2d0284ffd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d01f4de349688a4f6edfb1ee90d594e4cffec10f3784f3e818adf371a9b4bcbc063877f72e3ff2c0d097ccb6a68faebf0b37fe938a245b93d43f69626a9afa4ee800004000600ff90b5ab205c6974c9ea841be688864633dc9ca8a357843eeacf2314649965fe22e5c0"))
+	// todo - working origianl
+	//buffer.Write(common.MustHexToBytes("0x2d0284ffd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d015212790fabe9d6ca21948e82767f38a5ee8645b1426b8ef4a678299852dcfa694b8388b1aa76e9b34eeccaa023c5ff2d7207763fbf9eb5dd01b1617adb7350820000000600ff90b5ab205c6974c9ea841be688864633dc9ca8a357843eeacf2314649965fe22e5c0"))
 	ext := types.Extrinsic{}
+
 	err := decoder.Decode(&ext)
 	require.NoError(t, err)
 	fmt.Printf("decoded ext %+v\n", ext)

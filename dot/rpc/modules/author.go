@@ -17,14 +17,16 @@
 package modules
 
 import (
+	"bytes"
 	"fmt"
-	"net/http"
-	"reflect"
-
 	"github.com/ChainSafe/gossamer/dot/types"
 	"github.com/ChainSafe/gossamer/lib/common"
 	"github.com/ChainSafe/gossamer/lib/keystore"
 	log "github.com/ChainSafe/log15"
+	"github.com/centrifuge/go-substrate-rpc-client/v2/scale"
+	ctypes "github.com/centrifuge/go-substrate-rpc-client/v2/types"
+	"net/http"
+	"reflect"
 )
 
 // AuthorModule holds a pointer to the API
@@ -164,10 +166,19 @@ func (cm *AuthorModule) SubmitExtrinsic(r *http.Request, req *Extrinsic, res *Ex
 	if err != nil {
 		return err
 	}
+	//////////// testing decode
+	buffer := bytes.Buffer{}
+	decoder := scale.NewDecoder(&buffer)
+	buffer.Write(extBytes)
+	extTest := ctypes.Extrinsic{}
+	decoder.Decode(&extTest)
+	fmt.Printf("SUB TRANS decoded ext %+v\n", extTest)
+	///////////////
 	ext := types.Extrinsic(extBytes)
 	cm.logger.Trace("[rpc]", "extrinsic", ext)
 
 	err = cm.coreAPI.HandleSubmittedExtrinsic(ext)
+fmt.Printf("SUB TRANS %s\n", err)
 	*res = ExtrinsicHashResponse(ext.Hash().String())
 	return err
 }

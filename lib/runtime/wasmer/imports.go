@@ -665,7 +665,7 @@ func ext_crypto_sr25519_verify_version_2(context unsafe.Pointer, sig C.int32_t, 
 		"message", fmt.Sprintf("0x%x", message),
 		"signature", fmt.Sprintf("0x%x", signature),
 	)
-
+fmt.Printf("SIG mess: %x, sig: %x\n", message, signature)
 	if sigVerifier.IsStarted() {
 		signature := runtime.Signature{
 			PubKey:    pub.Encode(),
@@ -681,7 +681,7 @@ func ext_crypto_sr25519_verify_version_2(context unsafe.Pointer, sig C.int32_t, 
 		logger.Error("[ext_crypto_sr25519_verify_version_2] failed to validate signature", "error", err)
 		return 0
 	}
-
+fmt.Printf("SIG validated sig!")
 	logger.Debug("[ext_crypto_sr25519_verify_version_2] validated signature")
 	return C.int32_t(1)
 }

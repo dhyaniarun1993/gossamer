@@ -681,7 +681,7 @@ fmt.Printf("SIG mess: %x, sig: %x\n", message, signature)
 		logger.Error("[ext_crypto_sr25519_verify_version_2] failed to validate signature", "error", err)
 		return 0
 	}
-fmt.Printf("SIG validated sig!")
+fmt.Printf("SIG validated sig!\n")
 	logger.Debug("[ext_crypto_sr25519_verify_version_2] validated signature")
 	return C.int32_t(1)
 }

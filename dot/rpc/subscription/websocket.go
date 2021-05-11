@@ -103,6 +103,8 @@ fmt.Printf("MSG %s\n", mbytes)
 					continue
 				}
 				c.startListener(rvl)
+			case "state_unsubscribeStorage":
+				c.unsubscribeStorageListener(params)
 			}
 			continue
 		}
@@ -198,7 +200,7 @@ func (c *WSConn) initStorageChangeListener(reqID float64, params interface{}) (u
 
 	c.qtyListeners++
 	myObs.id = c.qtyListeners
-
+fmt.Printf("QTY LISTERERS %v\n", myObs.id)
 	c.StorageAPI.RegisterStorageObserver(myObs)
 
 	c.Subscriptions[myObs.id] = myObs
@@ -207,6 +209,9 @@ func (c *WSConn) initStorageChangeListener(reqID float64, params interface{}) (u
 	c.safeSend(initRes)
 
 	return myObs.id, nil
+}
+func (c *WSConn) unsubscribeStorageListener(params interface{}) {
+	fmt.Printf("UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU %v\n", params)
 }
 
 func (c *WSConn) initBlockListener(reqID float64) (uint, error) {

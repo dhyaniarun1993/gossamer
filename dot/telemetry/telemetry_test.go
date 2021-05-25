@@ -2,6 +2,7 @@ package telemetry
 
 import (
 	"bytes"
+	"fmt"
 	"log"
 	"math/big"
 	"net/http"
@@ -106,6 +107,16 @@ func TestHandler_SendMulti(t *testing.T) {
 	require.Contains(t, string(actual[1]), string(expected[1]))
 	require.Contains(t, string(actual[2]), string(expected[2]))
 	require.Contains(t, string(actual[3]), string(expected[3]))
+}
+
+// TestInfiniteListener starts loop that print out data received on websocket ws://localhost:8001/
+//  this can be useful to see what data is sent to telemetry server
+func TestInfiniteListener(t *testing.T) {
+	t.Skip()
+	resultCh = make(chan []byte)
+	for data := range resultCh {
+		fmt.Printf("Data %s\n", data)
+	}
 }
 
 func listen(w http.ResponseWriter, r *http.Request) {

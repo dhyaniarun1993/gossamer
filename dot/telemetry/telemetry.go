@@ -30,6 +30,7 @@ import (
 type telemetryConnection struct {
 	wsconn    *websocket.Conn
 	verbosity int
+	sync.Mutex
 }
 
 // Message struct to hold telemetry message data
@@ -42,7 +43,6 @@ type Handler struct {
 	msg         chan Message
 	ctx         context.Context
 	connections []telemetryConnection
-	sync.Mutex
 }
 
 // KeyValue object to hold key value pairs used in telemetry messages
@@ -117,14 +117,14 @@ func (t *Handler) startListening() {
 		select {
 		case msg := <-t.msg:
 			go func() {
-				t.Lock()
 				for _, v := range t.connections {
+					v.Lock()
 					err := v.wsconn.WriteMessage(websocket.TextMessage, msgToBytes(msg))
+					v.Unlock()
 					if err != nil {
 						// TODO (ed) determine how to handle this error
 					}
 				}
-				t.Unlock()
 			}()
 		case <-t.ctx.Done():
 			return

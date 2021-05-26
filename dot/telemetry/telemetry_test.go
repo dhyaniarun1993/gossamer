@@ -2,6 +2,7 @@ package telemetry
 
 import (
 	"bytes"
+	"fmt"
 	"log"
 	"math/big"
 	"net/http"
@@ -111,6 +112,24 @@ func TestHandler_SendMulti(t *testing.T) {
 	require.Contains(t, string(actual[1]), string(expected[1]))
 	require.Contains(t, string(actual[2]), string(expected[2]))
 	require.Contains(t, string(actual[3]), string(expected[3]))
+}
+
+func TestListenerRace(t *testing.T) {
+
+	resultCh = make(chan []byte)
+	for i := 0; i < 1000; i++ {
+
+		go func() {
+			GetInstance().SendMessage(NewTelemetryMessage(
+				NewKeyValue("best", "hash"),
+				NewKeyValue("height", big.NewInt(2)),
+				NewKeyValue("msg", "block.import"),
+				NewKeyValue("origin", "NetworkInitialSync")))
+		}()
+	}
+	for data := range resultCh {
+		fmt.Printf("Data %s\n", data)
+	}
 }
 
 func listen(w http.ResponseWriter, r *http.Request) {

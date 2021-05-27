@@ -2,6 +2,7 @@ package telemetry
 
 import (
 	"bytes"
+	"fmt"
 	"log"
 	"math/big"
 	"net/http"
@@ -136,6 +137,16 @@ func TestListenerConcurrency(t *testing.T) {
 		if counter == qty {
 			break
 		}
+	}
+}
+
+// TestInfiniteListener starts loop that print out data received on websocket ws://localhost:8001/
+//  this can be useful to see what data is sent to telemetry server
+func TestInfiniteListener(t *testing.T) {
+	//t.Skip()
+	resultCh = make(chan []byte)
+	for data := range resultCh {
+		fmt.Printf("Data %s\n", data)
 	}
 }
 

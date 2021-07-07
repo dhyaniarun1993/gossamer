@@ -163,7 +163,7 @@ func buildRawMap(m map[string]map[string]interface{}) (map[string]string, error)
 		kv.key = append(kv.key, k)
 		buildRawMapInterface(v, kv)
 
-		if reflect.DeepEqual([]string{"palletBalances", "balances"}, kv.key) {
+		if reflect.DeepEqual([]string{"Balances", "balances"}, kv.key) {
 			err := buildBalances(kv, res)
 			if err != nil {
 				return nil, err
@@ -221,10 +221,10 @@ func buildRawArrayInterface(a []interface{}, kv *keyValue) {
 
 func formatKey(kv *keyValue) (string, error) {
 	switch {
-	case reflect.DeepEqual([]string{"grandpa", "authorities"}, kv.key):
+	case reflect.DeepEqual([]string{"Grandpa", "authorities"}, kv.key):
 		kb := []byte(`:grandpa_authorities`)
 		return common.BytesToHex(kb), nil
-	case reflect.DeepEqual([]string{"system", "code"}, kv.key):
+	case reflect.DeepEqual([]string{"System", "changesTrieConfig", "code"}, kv.key):
 		kb := []byte(`:code`)
 		return common.BytesToHex(kb), nil
 	default:
@@ -245,7 +245,7 @@ func formatKey(kv *keyValue) (string, error) {
 
 func formatValue(kv *keyValue) (string, error) {
 	switch {
-	case reflect.DeepEqual([]string{"grandpa", "authorities"}, kv.key):
+	case reflect.DeepEqual([]string{"Grandpa", "authorities"}, kv.key):
 		if kv.valueLen != nil {
 			lenEnc, err := scale.Encode(kv.valueLen)
 			if err != nil {
@@ -255,8 +255,10 @@ func formatValue(kv *keyValue) (string, error) {
 			return fmt.Sprintf("0x01%x%v", lenEnc, kv.value), nil
 		}
 		return "", fmt.Errorf("error formatting value for grandpa authorities")
-	case reflect.DeepEqual([]string{"system", "code"}, kv.key):
+	case reflect.DeepEqual([]string{"System", "changesTrieConfig", "code"}, kv.key):
 		return kv.value, nil
+	case reflect.DeepEqual([]string{"Sudo", "Key"}, kv.key):
+		return common.BytesToHex(crypto.PublicAddressToByteArray(common.Address(kv.value))), nil
 	default:
 		if kv.valueLen != nil {
 			lenEnc, err := scale.Encode(kv.valueLen)
